@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { database } from "../utils/firebase";
-import { removeTodo, addTodo } from "../utils/TodoSlice";
+import { removeTodo, toggleComplete, updateTodo } from "../utils/TodoSlice";
 import { useDispatch } from "react-redux";
+import DelModal from "./DelModal";
+import UpdateModal from "./UpdateModal";
 
 const TodoCard = ({ todo }) => {
   const dispatch = useDispatch();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
   const deleteTodo = async () => {
     await deleteDoc(doc(database, "todos", todo.id));
     dispatch(removeTodo(todo.id));
@@ -13,15 +17,20 @@ const TodoCard = ({ todo }) => {
 
   const ToggleComplete = async () => {
     const Ref = doc(database, "todos", todo.id);
-
     await updateDoc(Ref, {
       completed: !todo.completed,
     });
-    dispatch(removeTodo(todo.id));
-    dispatch(
-      addTodo({ id: todo.id, text: todo.text, completed: !todo.completed })
-    );
+    dispatch(toggleComplete(todo.id));
   };
+
+  const update = async (val) => {
+    const Ref = doc(database, "todos", todo.id);
+    await updateDoc(Ref, {
+      text: val,
+    });
+    dispatch(updateTodo({ id: todo.id, val }));
+  };
+
   return (
     <div className="p-3 px-10 rounded-lg mb-5 border-2 border-cyan-800">
       <div
@@ -33,6 +42,7 @@ const TodoCard = ({ todo }) => {
         <p>{todo.text}</p>
         <div className="flex justify-between">
           <svg
+            onClick={() => setUpdateModal(!updateModal)}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -64,7 +74,7 @@ const TodoCard = ({ todo }) => {
           </svg>
 
           <svg
-            onClick={deleteTodo}
+            onClick={() => setShowDeleteModal(!showDeleteModal)}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -80,6 +90,16 @@ const TodoCard = ({ todo }) => {
           </svg>
         </div>
       </div>
+      {showDeleteModal ? (
+        <DelModal showModal={setShowDeleteModal} deleteTodo={deleteTodo} />
+      ) : null}
+      {updateModal ? (
+        <UpdateModal
+          showModal={setUpdateModal}
+          updateTodo={update}
+          text={todo.text}
+        />
+      ) : null}
     </div>
   );
 };
