@@ -32,14 +32,16 @@ const TodoCard = ({ todo }) => {
   };
 
   return (
-    <div className="p-3 px-10 rounded-lg mb-5 border-2 border-cyan-800">
+    <div className="p-3 sm:px-10 rounded-lg mb-5 border-2 border-cyan-800">
       <div
         className={
           `flex justify-between ` +
           (todo.completed ? "text-green-500" : "text-white")
         }
       >
-        <p>{todo.text}</p>
+        <div className="w-6/12">
+          <p>{todo.text}</p>
+        </div>
         <div className="flex justify-between">
           <svg
             onClick={() => setUpdateModal(!updateModal)}
