@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTodo } from "../utils/TodoSlice";
-import { database } from "../utils/firebase";
-import { collection, addDoc } from "firebase/firestore";
+// import { database } from "../utils/firebase";
+// import { collection, addDoc } from "firebase/firestore";
+import { API_URL } from "../utils/constants";
 
 const AddTodo = () => {
   const [val, setval] = useState("");
@@ -10,12 +11,35 @@ const AddTodo = () => {
   const addtodo = async (e) => {
     e.preventDefault();
     if (val === "") return;
-    const docRef = await addDoc(collection(database, "todos"), {
-      text: val,
-      completed: false,
-    });
+    // const docRef = await addDoc(collection(database, "todos"), {
+    //   text: val,
+    //   completed: false,
+    // });
+    fetch(API_URL, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        text: val,
+        completed: false,
+      }),
+    })
+      .then(async function (res) {
+        let res1 = await res.json();
+        dispatch(
+          addTodo({
+            _id: res1.task._id,
+            text: res1.task.text,
+            completed: res1.task.completed,
+          })
+        );
+      })
+      .catch(function (res) {
+        console.log(res);
+      });
 
-    dispatch(addTodo({ id: docRef.id, text: val, completed: false }));
     setval("");
   };
 

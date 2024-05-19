@@ -11,17 +11,17 @@ export const TodoSlice = createSlice({
       return action.payload;
     },
     removeTodo: (state, action) => {
-      state = state.filter((x) => x.id != action.payload);
+      state = state.filter((x) => x._id !== action.payload);
       return state;
     },
     toggleComplete: (state, action) => {
-      const todo = state.find((todo) => todo.id === action.payload);
+      const todo = state.find((todo) => todo._id === action.payload);
       if (todo) {
         todo.completed = !todo.completed;
       }
     },
     updateTodo: (state, action) => {
-      const todo = state.find((todo) => todo.id === action.payload.id);
+      const todo = state.find((todo) => todo._id === action.payload.id);
       if (todo) {
         todo.text = action.payload.val;
       }

@@ -15,7 +15,7 @@ const TodoList = () => {
   return (
     <div className="mt-7 px-6 sm:px-8 pb-10 max-h-[400px] overflow-y-scroll no-scrollbar">
       {filteredTodos?.map((todo) => (
-        <TodoCard key={todo.id} todo={todo} />
+        <TodoCard key={todo._id} todo={todo} />
       ))}
     </div>
   );
