@@ -7,6 +7,8 @@ import { API_URL } from "../utils/constants";
 
 const AddTodo = () => {
   const [val, setval] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [fail, setFail] = useState("");
   const dispatch = useDispatch();
   const addtodo = async (e) => {
     e.preventDefault();
@@ -15,31 +17,37 @@ const AddTodo = () => {
     //   text: val,
     //   completed: false,
     // });
-    fetch(API_URL, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify({
-        text: val,
-        completed: false,
-      }),
-    })
-      .then(async function (res) {
-        let res1 = await res.json();
-        dispatch(
-          addTodo({
-            _id: res1.task._id,
-            text: res1.task.text,
-            completed: res1.task.completed,
-          })
-        );
-      })
-      .catch(function (res) {
-        console.log(res);
+    try {
+      let res = await fetch(API_URL, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          text: val,
+          completed: false,
+        }),
       });
-
+      res = await res.json();
+      if (res.msg) throw new Error(res.msg);
+      dispatch(
+        addTodo({
+          _id: res.task._id,
+          text: res.task.text,
+          completed: res.task.completed,
+        })
+      );
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+    } catch (error) {
+      setFail(error.message);
+      setTimeout(() => {
+        setFail("");
+      }, 3000);
+    }
     setval("");
   };
 
@@ -56,6 +64,12 @@ const AddTodo = () => {
           ADD
         </button>
       </form>
+      {success && (
+        <div className="text-green-500 text-left mt-3">
+          Todo added successfully!!
+        </div>
+      )}
+      {fail !== "" && <div className="text-left mt-3 text-red-600">{fail}</div>}
     </div>
   );
 };

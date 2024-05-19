@@ -23,26 +23,26 @@ const TodoCard = ({ todo }) => {
     }
   };
 
-  const ToggleComplete = async () => {
-    // const Ref = doc(database, "todos", todo.id);
-    // await updateDoc(Ref, {
-    //   completed: !todo.completed,
-    // });
-    try {
-      await fetch(API_URL + todo._id, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ completed: !todo.completed }),
-      });
-      dispatch(toggleComplete(todo._id));
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const ToggleComplete = async () => {
+  //   // const Ref = doc(database, "todos", todo.id);
+  //   // await updateDoc(Ref, {
+  //   //   completed: !todo.completed,
+  //   // });
+  //   try {
+  //     await fetch(API_URL + todo._id, {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ completed: !todo.completed }),
+  //     });
+  //     dispatch(toggleComplete(todo._id));
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
-  const update = async (val) => {
+  const update = async (newTodo) => {
     // const Ref = doc(database, "todos", todo._id);
     // await updateDoc(Ref, {
     //   text: val,
@@ -53,9 +53,9 @@ const TodoCard = ({ todo }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: val }),
+        body: JSON.stringify(newTodo),
       });
-      dispatch(updateTodo({ id: todo._id, val }));
+      dispatch(updateTodo({ id: todo._id, ...newTodo }));
     } catch (err) {
       console.log(err);
     }
@@ -80,7 +80,7 @@ const TodoCard = ({ todo }) => {
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            className="w-6 h-6 cursor-pointer"
+            className="w-6 h-6 text-orange-400 cursor-pointer"
           >
             <path
               strokeLinecap="round"
@@ -89,7 +89,7 @@ const TodoCard = ({ todo }) => {
             />
           </svg>
 
-          <svg
+          {/* <svg
             onClick={ToggleComplete}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -103,7 +103,7 @@ const TodoCard = ({ todo }) => {
               strokeLinejoin="round"
               d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
             />
-          </svg>
+          </svg> */}
 
           <svg
             onClick={() => setShowDeleteModal(!showDeleteModal)}
@@ -112,7 +112,7 @@ const TodoCard = ({ todo }) => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 ml-7 text-white cursor-pointer"
+            className="w-6 h-6 ml-7 text-red-500 cursor-pointer"
           >
             <path
               strokeLinecap="round"
@@ -130,6 +130,7 @@ const TodoCard = ({ todo }) => {
           showModal={setUpdateModal}
           updateTodo={update}
           text={todo.text}
+          completed={todo.completed}
         />
       ) : null}
     </div>
