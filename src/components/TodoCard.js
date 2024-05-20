@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 // import { database } from "../utils/firebase";
-import { removeTodo, toggleComplete, updateTodo } from "../utils/TodoSlice";
+import { removeTodo, updateTodo } from "../utils/TodoSlice";
 import { useDispatch } from "react-redux";
 import DelModal from "./DelModal";
 import UpdateModal from "./UpdateModal";
